@@ -3,18 +3,30 @@ package com.example.augustk.tanvasapp;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import co.tanvas.haptics.service.app.*;
-import co.tanvas.haptics.service.adapter.*;
-import co.tanvas.haptics.service.model.*;
+import org.rajawali3d.renderer.Renderer;
+import org.rajawali3d.view.ISurface;
+import org.rajawali3d.view.SurfaceView;
+
+import co.tanvas.haptics.service.adapter.HapticServiceAdapter;
+import co.tanvas.haptics.service.app.HapticApplication;
+import co.tanvas.haptics.service.model.HapticMaterial;
+import co.tanvas.haptics.service.model.HapticSprite;
+import co.tanvas.haptics.service.model.HapticTexture;
+import co.tanvas.haptics.service.model.HapticView;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private Renderer renderer;
 
     private HapticView mHapticView;
     private HapticTexture mHapticTexture;
@@ -25,6 +37,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final SurfaceView surface = new SurfaceView(this);
+        surface.setFrameRate(60.0);
+        surface.setRenderMode(ISurface.RENDERMODE_WHEN_DIRTY);
+
+        // Add mSurface to your root view
+        addContentView(surface, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
+
+        renderer = new CustomRenderer(this);
+        surface.setSurfaceRenderer(renderer);
+
         // Init haptics
         initHaptics();
     }
@@ -36,9 +59,15 @@ public class MainActivity extends AppCompatActivity {
             HapticServiceAdapter serviceAdapter =
                     HapticApplication.getHapticServiceAdapter();
 
+
+
             // Create a haptic view and activate it
             mHapticView = HapticView.create(serviceAdapter);
             mHapticView.activate();
+
+
+
+
 
             // Set the orientation of the haptic view
             Display display = ((WindowManager)
@@ -49,11 +78,18 @@ public class MainActivity extends AppCompatActivity {
 
             mHapticView.setOrientation(orientation);
 
+
+
+
+
+
             // Retrieve texture data from the bitmap
             Bitmap hapticBitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.noise_texture);
             byte[] textureData =
                     HapticTexture.createTextureDataFromBitmap(hapticBitmap);
+
+
 
             // Create a haptic texture with the retrieved texture data
             mHapticTexture = HapticTexture.create(serviceAdapter);
@@ -62,13 +98,19 @@ public class MainActivity extends AppCompatActivity {
             mHapticTexture.setSize(textureDataWidth, textureDataHeight);
             mHapticTexture.setData(textureData);
 
+
+
             // Create a haptic material with the created haptic texture
             mHapticMaterial = HapticMaterial.create(serviceAdapter);
             mHapticMaterial.setTexture(0, mHapticTexture);
 
+
+
             // Create a haptic sprite with the haptic material
             mHapticSprite = HapticSprite.create(serviceAdapter);
             mHapticSprite.setMaterial(mHapticMaterial);
+
+
 
             // Add the haptic sprite to the haptic view
             mHapticView.addSprite(mHapticSprite);
