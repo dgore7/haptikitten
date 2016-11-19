@@ -8,7 +8,13 @@ import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import org.rajawali3d.Object3D;
+import org.rajawali3d.animation.Animation;
+import org.rajawali3d.animation.Animation3D;
+import org.rajawali3d.animation.RotateOnAxisAnimation;
 import org.rajawali3d.lights.DirectionalLight;
+import org.rajawali3d.loader.ParsingException;
+import org.rajawali3d.loader.fbx.LoaderFBX;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
 import org.rajawali3d.materials.textures.ATexture;
@@ -19,6 +25,7 @@ import org.rajawali3d.renderer.Renderer;
 
 public class CustomRenderer extends Renderer {
 
+    private Animation3D mAnim;
     private Sphere mEarthSphere;
     private DirectionalLight mDirectionalLight;
 
@@ -26,6 +33,28 @@ public class CustomRenderer extends Renderer {
         super(context);
         //this.context = context;
         setFrameRate(60);
+    }
+
+    private void loadAnim()
+    {
+        mAnim = new RotateOnAxisAnimation(Vector3.Axis.Y, 360);
+        mAnim.setDurationMilliseconds(16000);
+        mAnim.setRepeatMode(Animation.RepeatMode.INFINITE);
+        getCurrentScene().registerAnimation(mAnim);
+
+        try {
+            LoaderFBX parser = new LoaderFBX(this, R.raw.kitten_idle);
+            parser.parse();
+            Object3D o = parser.getParsedObject();
+            o.setScale(100.0f);
+            o.setY(-0.5f);
+            getCurrentScene().addChild(o);
+
+            mAnim.setTransformable3D(o);
+            mAnim.play();
+        } catch (ParsingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -50,8 +79,11 @@ public class CustomRenderer extends Renderer {
 
         mEarthSphere = new Sphere(1, 24, 24);
         mEarthSphere.setMaterial(material);
-        getCurrentScene().addChild(mEarthSphere);
+        //getCurrentScene().addChild(mEarthSphere);
         getCurrentCamera().setZ(4.2f);
+
+
+        loadAnim();
     }
 
     @Override
