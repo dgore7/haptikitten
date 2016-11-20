@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/atu.iml" filepath="$PROJECT_DIR$/.idea/modules/atu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tanvas-hapticlib-3.0-163/tanvas-hapticlib-3.0-163.iml" filepath="$PROJECT_DIR$/.idea/modules/tanvas-hapticlib-3.0-163/tanvas-hapticlib-3.0-163.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tanvashapticlib30163/tanvashapticlib30163.iml" filepath="$PROJECT_DIR$/.idea/modules/tanvashapticlib30163/tanvashapticlib30163.iml" />
+    </modules>
+  </component>
+</project>
